@@ -76,23 +76,11 @@ section .data
     strClear db 27,"[H",27,"[2J"
     lenStrClear equ $-strClear
     
-    ; strInvalid db "Invalid number. Try again.",10
-    ; lenInvalid equ $-strInvalid
-    
-    ; strDecimal db "Decimal: "
-    ; lenDecimal equ $-strDecimal
-    
-    ; numFloat db "0100000010001000"
-    ; lenFloat equ $-numFloat
-    
-    ; signal db "-",10
-    
-    lenAscii equ 16
+    lenAscii equ 1
 
 section .bss
 
     strAscii resb lenAscii
-    ; numDecimal resb 1
 
 section .text
     global _start
@@ -101,13 +89,15 @@ section .text
         print strLabelFechado, lenStrLabelFechado
         print strFechado, lenStrFechado
         scan strAscii, lenAscii
+
         print strClear, lenStrClear
         print strLabelAbrindo, lenStrLabelAbrindo
         print strAbrindo, lenStrAbrindo
         scan strAscii, lenAscii
+        
         print strClear, lenStrClear
         print strLabelFechando, lenStrLabelFechando
         print strFechando, lenStrFechando
         scan strAscii, lenAscii
-        print strClear, lenStrClear
+
         exit
