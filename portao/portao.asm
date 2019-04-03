@@ -59,6 +59,13 @@ NULL equ 0x00
 
 %endmacro
 
+%macro opcaoIncorreta 4
+    print   %1, %2
+    scan    %3, 1
+    call      %4
+    syscall
+%endmacro
+
 section .data
 
     labelFechado db "DESENHANDO COM CARACTERES: FECHADO", LF
@@ -106,6 +113,11 @@ section .data
     
     menuAberto db "f - Fechar o portao", LF, "0 - Sair", LF, LF
     lenMenuAberto equ $-menuAberto
+
+
+    
+    teste db "*** Opção incorreta, digite novamente ***", LF, LF
+    lenTeste equ $-teste
 
 
     estado db "0", 0
@@ -162,6 +174,7 @@ section .text
             mov     al, 'f'
             cmp     [opcao], al
             je      .close
+            opcaoIncorreta teste, lenTeste, opcao, _menu
 
             .open:
                 print labelAberto, lenLabelAberto
@@ -186,6 +199,7 @@ section .text
             mov     al, 'f'
             cmp     [opcao], al
             je      .close
+            opcaoIncorreta teste, lenTeste, opcao, _menuAberto
 
             .close:
                 print labelFechando, lenLabelFechando
@@ -207,6 +221,7 @@ section .text
             mov     al, 'f'
             cmp     [opcao], al
             je      .close
+            opcaoIncorreta teste, lenTeste, opcao, _menuAbrindo
 
             .open:
                 print labelAberto, lenLabelAberto
@@ -234,6 +249,7 @@ section .text
             mov     al, 'f'
             cmp     [opcao], al
             je      .close
+            opcaoIncorreta teste, lenTeste, opcao, _menuFechando
 
             .open:
                 print labelAbrindo, lenLabelAbrindo
@@ -257,6 +273,7 @@ section .text
             mov     al, 'a'
             cmp     [opcao], al
             je      .open
+            opcaoIncorreta teste, lenTeste, opcao, _menuFechado
 
             .open:
                 print labelAbrindo, lenLabelAbrindo
