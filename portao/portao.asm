@@ -16,6 +16,9 @@
 ;   resb = reserve byte
 ;   resw = reserve word
 ;   resd = reserve double word
+;
+; definicoes
+;   estado do portao: {a: aberto, f: fechado, i: abrindo, n: fechando}
 
 STDIN equ 0
 STDOUT equ 1
@@ -89,11 +92,13 @@ section .data
 
     menu db "O que voce deseja fazer?", LF
     lenMenu equ $-menu
+    menu2 db "a - Abrir o portao", LF, "f - Fechar o portao?", LF, LF
+    lenMenu2 equ $-menu2
 
     menuFechado db "a - Abrir o portao", LF, "0 - Sair", LF, LF
     lenMenuFechado equ $-menuFechado
     
-    menuAbrindo db "c - Continuar abertura", LF, "f - Fechar o portao", LF, "0 - Sair", LF, LF
+    menuAbrindo db "a - Continuar abertura", LF, "f - Fechar o portao", LF, "0 - Sair", LF, LF
     lenMenuAbrindo equ $-menuAbrindo
     
     menuFechando db "a - Abrir o portao", LF, "f - Continuar fechando o portao", LF, "0 - Sair", LF, LF
@@ -121,10 +126,103 @@ section .text
 
         _menu:
             print   menu, lenMenu
+            print   menu2, lenMenu2
             scan    opcao, 1
             call _checkOption
 
+        _menuAberto:
+            print   menuAberto, lenMenuAberto
+            scan    opcao, 1
+            call _checkOptionAberto
+
+        _menuAbrindo:
+            print   menuAbrindo, lenMenuAbrindo
+            scan    opcao, 1
+            call _checkOptionAbrindo
+
+        _menuFechado:
+            print   menuFechado, lenMenuFechado
+            scan    opcao, 1
+            call _checkOptionFechado
+
+        _menuFechando:
+            print   menuFechando, lenMenuFechando
+            scan    opcao, 1
+            call _checkOptionFechando
+
         _checkOption:
+            mov     al, '0'
+            cmp     [opcao], al
+            je      .end
+
+            mov     al, 'a'
+            cmp     [opcao], al
+            je      .open
+
+            mov     al, 'f'
+            cmp     [opcao], al
+            je      .close
+
+            .open:
+                print labelAberto, lenLabelAberto
+                print portaoAberto, lenPortaoAberto
+                scan opcao, 1
+                call _menuAberto
+
+            .close:
+                print labelFechado, lenLabelFechado
+                print portaoFechado, lenPortaoFechado
+                scan opcao, 1
+                call _menuFechado
+        .end:
+            exit
+
+
+        _checkOptionAberto:
+            mov     al, '0'
+            cmp     [opcao], al
+            je      .end
+
+            mov     al, 'f'
+            cmp     [opcao], al
+            je      .close
+
+            .close:
+                print labelFechando, lenLabelFechando
+                print portaoFechando, lenPortaoFechando
+                scan opcao, 1
+                call _menuFechando
+        .end:
+            exit
+
+        _checkOptionAbrindo:
+            mov     al, '0'
+            cmp     [opcao], al
+            je      .end
+
+            mov     al, 'a'
+            cmp     [opcao], al
+            je      .open
+
+            mov     al, 'f'
+            cmp     [opcao], al
+            je      .close
+
+            .open:
+                print labelAberto, lenLabelAberto
+                print portaoAberto, lenPortaoAberto
+                scan opcao, 1
+                call _menuAberto
+
+            .close:
+                print labelFechando, lenLabelFechando
+                print portaoFechando, lenPortaoFechando
+                scan opcao, 1
+                call _menuFechando
+        .end:
+            exit
+
+        _checkOptionFechando:
             mov     al, '0'
             cmp     [opcao], al
             je      .end
@@ -141,16 +239,29 @@ section .text
                 print labelAbrindo, lenLabelAbrindo
                 print portaoAbrindo, lenPortaoAbrindo
                 scan opcao, 1
+                call _menuAbrindo
 
             .close:
-        ; print labelFechado, lenLabelFechado
-        ; print portaoFechado, lenPortaoFechado
-        ; scan Char, lenChar
+                print labelFechado, lenLabelFechado
+                print portaoFechado, lenPortaoFechado
+                scan opcao, 1
+                call _menuFechado
+        .end:
+            exit
 
-        ; print clear, lenClear
-        
-        ; print clear, lenClear
-        ; print labelFechando, lenLabelFechando
-        ; print portaoFechando, lenPortaoFechando
+        _checkOptionFechado:
+            mov     al, '0'
+            cmp     [opcao], al
+            je      .end
+
+            mov     al, 'a'
+            cmp     [opcao], al
+            je      .open
+
+            .open:
+                print labelAbrindo, lenLabelAbrindo
+                print portaoAbrindo, lenPortaoAbrindo
+                scan opcao, 1
+                call _menuAbrindo
         .end:
             exit
