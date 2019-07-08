@@ -48,7 +48,7 @@ NULL equ 0x00
 %macro scan 2
 	mov rax, SYS_READ   ; systemcall for read
 	mov rdi, STDIN      ; file handle 1 is stdin
-	mov rsi, %1         ; address of ing to input
+	mov rsi, %1         ; address of input
 	mov rdx, %2         ; number of bytes 
 	syscall
 %endmacro
@@ -164,6 +164,7 @@ section .text
 				call _checkOption
 
 		_checkOption:
+			print 	clear, lenClear
 			cmp     BYTE[status], '?'
 			je      .starting
 			cmp     BYTE[opcao], '0'
