@@ -47,7 +47,7 @@ NULL equ 0x00
 
 %macro scan 2
 	mov rax, SYS_READ   ; systemcall for read
-	mov rdi, STDIN      ; file handle 1 is stdin
+	mov rdi, STDIN      ; file handle 0 is stdin
 	mov rsi, %1         ; address of input
 	mov rdx, %2         ; number of bytes 
 	syscall
