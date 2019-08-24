@@ -6186,8 +6186,6 @@
 .text:00000000 <_start>:
                            .text:00000000 b8 01 00 00 00                   mov    eax,0x1
                            .text:00000005 bf 01 00 00 00                   mov    edi,0x1
-
-.text:0000000a <LF>:
                            .text:0000000a 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
                            .text:00000014 ba 19 00 00 00                   mov    edx,0x19
 
@@ -6265,13 +6263,13 @@
                            .text:00000112 ba 07 00 00 00                   mov    edx,0x7
                            .text:00000117 0f 05                            syscall 
                            .text:00000119 80 3c 25 00 00 00 00 3f          cmp    BYTE PTR ds:0x0,0x3f
-                           .text:00000121 74 65                            je     0x00000188 <_checkOption.starting>
+                           .text:00000121 74 63                            je     0x00000186 <_checkOption.starting>
                            .text:00000123 80 3c 25 00 00 00 00 30          cmp    BYTE PTR ds:0x0,0x30
-                           .text:0000012b 0f 84 b8 00 00 00                je     0x000001e9 <_checkOption.end>
+                           .text:0000012b 0f 84 b4 00 00 00                je     0x000001e5 <_checkOption.end>
                            .text:00000131 80 3c 25 00 00 00 00 61          cmp    BYTE PTR ds:0x0,0x61
-                           .text:00000139 0f 84 b4 00 00 00                je     0x000001f3 <_checkOption.open>
+                           .text:00000139 0f 84 b2 00 00 00                je     0x000001f1 <_checkOption.open>
                            .text:0000013f 80 3c 25 00 00 00 00 66          cmp    BYTE PTR ds:0x0,0x66
-                           .text:00000147 0f 84 0b 01 00 00                je     0x00000258 <_checkOption.close>
+                           .text:00000147 0f 84 07 01 00 00                je     0x00000254 <_checkOption.close>
                            .text:0000014d b8 01 00 00 00                   mov    eax,0x1
                            .text:00000152 bf 01 00 00 00                   mov    edi,0x1
                            .text:00000157 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
@@ -6281,143 +6279,139 @@
                            .text:0000016d bf 00 00 00 00                   mov    edi,0x0
                            .text:00000172 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
                            .text:0000017c ba 01 00 00 00                   mov    edx,0x1
-                           .text:00000181 0f 05                            syscall 
-                           .text:00000183 e8 78 fe ff ff                   call   0x00000000 <_start>
+                           .text:00000181 e8 7a fe ff ff                   call   0x00000000 <_start>
 
-.text:00000188 <_checkOption.starting>:
-                           .text:00000188 80 3c 25 00 00 00 00 30          cmp    BYTE PTR ds:0x0,0x30
-                           .text:00000190 74 57                            je     0x000001e9 <_checkOption.end>
-                           .text:00000192 80 3c 25 00 00 00 00 61          cmp    BYTE PTR ds:0x0,0x61
-                           .text:0000019a 0f 84 1d 01 00 00                je     0x000002bd <_checkOption.opened>
-                           .text:000001a0 80 3c 25 00 00 00 00 66          cmp    BYTE PTR ds:0x0,0x66
-                           .text:000001a8 0f 84 29 02 00 00                je     0x000003d7 <_checkOption.closed>
-                           .text:000001ae b8 01 00 00 00                   mov    eax,0x1
-                           .text:000001b3 bf 01 00 00 00                   mov    edi,0x1
-                           .text:000001b8 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:000001c2 ba 2d 00 00 00                   mov    edx,0x2d
-                           .text:000001c7 0f 05                            syscall 
-                           .text:000001c9 b8 00 00 00 00                   mov    eax,0x0
-                           .text:000001ce bf 00 00 00 00                   mov    edi,0x0
-                           .text:000001d3 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:000001dd ba 01 00 00 00                   mov    edx,0x1
-                           .text:000001e2 0f 05                            syscall 
-                           .text:000001e4 e8 17 fe ff ff                   call   0x00000000 <_start>
+.text:00000186 <_checkOption.starting>:
+                           .text:00000186 80 3c 25 00 00 00 00 30          cmp    BYTE PTR ds:0x0,0x30
+                           .text:0000018e 74 55                            je     0x000001e5 <_checkOption.end>
+                           .text:00000190 80 3c 25 00 00 00 00 61          cmp    BYTE PTR ds:0x0,0x61
+                           .text:00000198 0f 84 19 01 00 00                je     0x000002b7 <_checkOption.opened>
+                           .text:0000019e 80 3c 25 00 00 00 00 66          cmp    BYTE PTR ds:0x0,0x66
+                           .text:000001a6 0f 84 25 02 00 00                je     0x000003d1 <_checkOption.closed>
+                           .text:000001ac b8 01 00 00 00                   mov    eax,0x1
+                           .text:000001b1 bf 01 00 00 00                   mov    edi,0x1
+                           .text:000001b6 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:000001c0 ba 2d 00 00 00                   mov    edx,0x2d
+                           .text:000001c5 0f 05                            syscall 
+                           .text:000001c7 b8 00 00 00 00                   mov    eax,0x0
+                           .text:000001cc bf 00 00 00 00                   mov    edi,0x0
+                           .text:000001d1 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:000001db ba 01 00 00 00                   mov    edx,0x1
+                           .text:000001e0 e8 1b fe ff ff                   call   0x00000000 <_start>
 
-.text:000001e9 <_checkOption.end>:
-                           .text:000001e9 b8 3c 00 00 00                   mov    eax,0x3c
-                           .text:000001ee 48 31 ff                         xor    rdi,rdi
-                           .text:000001f1 0f 05                            syscall 
+.text:000001e5 <_checkOption.end>:
+                           .text:000001e5 b8 3c 00 00 00                   mov    eax,0x3c
+                           .text:000001ea bf 00 00 00 00                   mov    edi,0x0
+                           .text:000001ef 0f 05                            syscall 
 
-.text:000001f3 <_checkOption.open>:
-                           .text:000001f3 80 3c 25 00 00 00 00 31          cmp    BYTE PTR ds:0x0,0x31
-                           .text:000001fb 0f 84 bc 00 00 00                je     0x000002bd <_checkOption.opened>
-                           .text:00000201 80 3c 25 00 00 00 00 32          cmp    BYTE PTR ds:0x0,0x32
-                           .text:00000209 0f 84 0c 01 00 00                je     0x0000031b <_checkOption.opening>
-                           .text:0000020f 80 3c 25 00 00 00 00 33          cmp    BYTE PTR ds:0x0,0x33
-                           .text:00000217 0f 84 fe 00 00 00                je     0x0000031b <_checkOption.opening>
-                           .text:0000021d b8 01 00 00 00                   mov    eax,0x1
-                           .text:00000222 bf 01 00 00 00                   mov    edi,0x1
-                           .text:00000227 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:00000231 ba 2d 00 00 00                   mov    edx,0x2d
-                           .text:00000236 0f 05                            syscall 
-                           .text:00000238 b8 00 00 00 00                   mov    eax,0x0
-                           .text:0000023d bf 00 00 00 00                   mov    edi,0x0
-                           .text:00000242 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:0000024c ba 01 00 00 00                   mov    edx,0x1
-                           .text:00000251 0f 05                            syscall 
-                           .text:00000253 e8 a8 fd ff ff                   call   0x00000000 <_start>
+.text:000001f1 <_checkOption.open>:
+                           .text:000001f1 80 3c 25 00 00 00 00 31          cmp    BYTE PTR ds:0x0,0x31
+                           .text:000001f9 0f 84 b8 00 00 00                je     0x000002b7 <_checkOption.opened>
+                           .text:000001ff 80 3c 25 00 00 00 00 32          cmp    BYTE PTR ds:0x0,0x32
+                           .text:00000207 0f 84 08 01 00 00                je     0x00000315 <_checkOption.opening>
+                           .text:0000020d 80 3c 25 00 00 00 00 33          cmp    BYTE PTR ds:0x0,0x33
+                           .text:00000215 0f 84 fa 00 00 00                je     0x00000315 <_checkOption.opening>
+                           .text:0000021b b8 01 00 00 00                   mov    eax,0x1
+                           .text:00000220 bf 01 00 00 00                   mov    edi,0x1
+                           .text:00000225 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:0000022f ba 2d 00 00 00                   mov    edx,0x2d
+                           .text:00000234 0f 05                            syscall 
+                           .text:00000236 b8 00 00 00 00                   mov    eax,0x0
+                           .text:0000023b bf 00 00 00 00                   mov    edi,0x0
+                           .text:00000240 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:0000024a ba 01 00 00 00                   mov    edx,0x1
+                           .text:0000024f e8 ac fd ff ff                   call   0x00000000 <_start>
 
-.text:00000258 <_checkOption.close>:
-                           .text:00000258 80 3c 25 00 00 00 00 30          cmp    BYTE PTR ds:0x0,0x30
-                           .text:00000260 0f 84 13 01 00 00                je     0x00000379 <_checkOption.closing>
-                           .text:00000266 80 3c 25 00 00 00 00 31          cmp    BYTE PTR ds:0x0,0x31
-                           .text:0000026e 0f 84 05 01 00 00                je     0x00000379 <_checkOption.closing>
-                           .text:00000274 80 3c 25 00 00 00 00 33          cmp    BYTE PTR ds:0x0,0x33
-                           .text:0000027c 0f 84 55 01 00 00                je     0x000003d7 <_checkOption.closed>
-                           .text:00000282 b8 01 00 00 00                   mov    eax,0x1
-                           .text:00000287 bf 01 00 00 00                   mov    edi,0x1
-                           .text:0000028c 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:00000296 ba 2d 00 00 00                   mov    edx,0x2d
-                           .text:0000029b 0f 05                            syscall 
-                           .text:0000029d b8 00 00 00 00                   mov    eax,0x0
-                           .text:000002a2 bf 00 00 00 00                   mov    edi,0x0
-                           .text:000002a7 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:000002b1 ba 01 00 00 00                   mov    edx,0x1
-                           .text:000002b6 0f 05                            syscall 
-                           .text:000002b8 e8 43 fd ff ff                   call   0x00000000 <_start>
+.text:00000254 <_checkOption.close>:
+                           .text:00000254 80 3c 25 00 00 00 00 30          cmp    BYTE PTR ds:0x0,0x30
+                           .text:0000025c 0f 84 11 01 00 00                je     0x00000373 <_checkOption.closing>
+                           .text:00000262 80 3c 25 00 00 00 00 31          cmp    BYTE PTR ds:0x0,0x31
+                           .text:0000026a 0f 84 03 01 00 00                je     0x00000373 <_checkOption.closing>
+                           .text:00000270 80 3c 25 00 00 00 00 33          cmp    BYTE PTR ds:0x0,0x33
+                           .text:00000278 0f 84 53 01 00 00                je     0x000003d1 <_checkOption.closed>
+                           .text:0000027e b8 01 00 00 00                   mov    eax,0x1
+                           .text:00000283 bf 01 00 00 00                   mov    edi,0x1
+                           .text:00000288 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:00000292 ba 2d 00 00 00                   mov    edx,0x2d
+                           .text:00000297 0f 05                            syscall 
+                           .text:00000299 b8 00 00 00 00                   mov    eax,0x0
+                           .text:0000029e bf 00 00 00 00                   mov    edi,0x0
+                           .text:000002a3 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:000002ad ba 01 00 00 00                   mov    edx,0x1
+                           .text:000002b2 e8 49 fd ff ff                   call   0x00000000 <_start>
 
-.text:000002bd <_checkOption.opened>:
-                           .text:000002bd c6 04 25 00 00 00 00 30          mov    BYTE PTR ds:0x0,0x30
-                           .text:000002c5 b8 01 00 00 00                   mov    eax,0x1
-                           .text:000002ca bf 01 00 00 00                   mov    edi,0x1
-                           .text:000002cf 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:000002d9 ba 22 00 00 00                   mov    edx,0x22
-                           .text:000002de 0f 05                            syscall 
-                           .text:000002e0 b8 01 00 00 00                   mov    eax,0x1
-                           .text:000002e5 bf 01 00 00 00                   mov    edi,0x1
-                           .text:000002ea 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:000002f4 ba 40 05 00 00                   mov    edx,0x540
-                           .text:000002f9 0f 05                            syscall 
-                           .text:000002fb b8 00 00 00 00                   mov    eax,0x0
-                           .text:00000300 bf 00 00 00 00                   mov    edi,0x0
-                           .text:00000305 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:0000030f ba 01 00 00 00                   mov    edx,0x1
-                           .text:00000314 0f 05                            syscall 
-                           .text:00000316 e8 e5 fc ff ff                   call   0x00000000 <_start>
+.text:000002b7 <_checkOption.opened>:
+                           .text:000002b7 c6 04 25 00 00 00 00 30          mov    BYTE PTR ds:0x0,0x30
+                           .text:000002bf b8 01 00 00 00                   mov    eax,0x1
+                           .text:000002c4 bf 01 00 00 00                   mov    edi,0x1
+                           .text:000002c9 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:000002d3 ba 22 00 00 00                   mov    edx,0x22
+                           .text:000002d8 0f 05                            syscall 
+                           .text:000002da b8 01 00 00 00                   mov    eax,0x1
+                           .text:000002df bf 01 00 00 00                   mov    edi,0x1
+                           .text:000002e4 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:000002ee ba 40 05 00 00                   mov    edx,0x540
+                           .text:000002f3 0f 05                            syscall 
+                           .text:000002f5 b8 00 00 00 00                   mov    eax,0x0
+                           .text:000002fa bf 00 00 00 00                   mov    edi,0x0
+                           .text:000002ff 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:00000309 ba 01 00 00 00                   mov    edx,0x1
+                           .text:0000030e 0f 05                            syscall 
+                           .text:00000310 e8 eb fc ff ff                   call   0x00000000 <_start>
 
-.text:0000031b <_checkOption.opening>:
-                           .text:0000031b c6 04 25 00 00 00 00 31          mov    BYTE PTR ds:0x0,0x31
-                           .text:00000323 b8 01 00 00 00                   mov    eax,0x1
-                           .text:00000328 bf 01 00 00 00                   mov    edi,0x1
-                           .text:0000032d 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:00000337 ba 23 00 00 00                   mov    edx,0x23
-                           .text:0000033c 0f 05                            syscall 
-                           .text:0000033e b8 01 00 00 00                   mov    eax,0x1
-                           .text:00000343 bf 01 00 00 00                   mov    edi,0x1
-                           .text:00000348 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:00000352 ba 71 05 00 00                   mov    edx,0x571
-                           .text:00000357 0f 05                            syscall 
-                           .text:00000359 b8 00 00 00 00                   mov    eax,0x0
-                           .text:0000035e bf 00 00 00 00                   mov    edi,0x0
-                           .text:00000363 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:0000036d ba 01 00 00 00                   mov    edx,0x1
-                           .text:00000372 0f 05                            syscall 
-                           .text:00000374 e8 87 fc ff ff                   call   0x00000000 <_start>
+.text:00000315 <_checkOption.opening>:
+                           .text:00000315 c6 04 25 00 00 00 00 31          mov    BYTE PTR ds:0x0,0x31
+                           .text:0000031d b8 01 00 00 00                   mov    eax,0x1
+                           .text:00000322 bf 01 00 00 00                   mov    edi,0x1
+                           .text:00000327 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:00000331 ba 23 00 00 00                   mov    edx,0x23
+                           .text:00000336 0f 05                            syscall 
+                           .text:00000338 b8 01 00 00 00                   mov    eax,0x1
+                           .text:0000033d bf 01 00 00 00                   mov    edi,0x1
+                           .text:00000342 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:0000034c ba 71 05 00 00                   mov    edx,0x571
+                           .text:00000351 0f 05                            syscall 
+                           .text:00000353 b8 00 00 00 00                   mov    eax,0x0
+                           .text:00000358 bf 00 00 00 00                   mov    edi,0x0
+                           .text:0000035d 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:00000367 ba 01 00 00 00                   mov    edx,0x1
+                           .text:0000036c 0f 05                            syscall 
+                           .text:0000036e e8 8d fc ff ff                   call   0x00000000 <_start>
 
-.text:00000379 <_checkOption.closing>:
-                           .text:00000379 c6 04 25 00 00 00 00 33          mov    BYTE PTR ds:0x0,0x33
-                           .text:00000381 b8 01 00 00 00                   mov    eax,0x1
-                           .text:00000386 bf 01 00 00 00                   mov    edi,0x1
-                           .text:0000038b 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:00000395 ba 24 00 00 00                   mov    edx,0x24
-                           .text:0000039a 0f 05                            syscall 
-                           .text:0000039c b8 01 00 00 00                   mov    eax,0x1
-                           .text:000003a1 bf 01 00 00 00                   mov    edi,0x1
-                           .text:000003a6 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:000003b0 ba 71 05 00 00                   mov    edx,0x571
-                           .text:000003b5 0f 05                            syscall 
-                           .text:000003b7 b8 00 00 00 00                   mov    eax,0x0
-                           .text:000003bc bf 00 00 00 00                   mov    edi,0x0
-                           .text:000003c1 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:000003cb ba 01 00 00 00                   mov    edx,0x1
-                           .text:000003d0 0f 05                            syscall 
-                           .text:000003d2 e8 29 fc ff ff                   call   0x00000000 <_start>
+.text:00000373 <_checkOption.closing>:
+                           .text:00000373 c6 04 25 00 00 00 00 33          mov    BYTE PTR ds:0x0,0x33
+                           .text:0000037b b8 01 00 00 00                   mov    eax,0x1
+                           .text:00000380 bf 01 00 00 00                   mov    edi,0x1
+                           .text:00000385 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:0000038f ba 24 00 00 00                   mov    edx,0x24
+                           .text:00000394 0f 05                            syscall 
+                           .text:00000396 b8 01 00 00 00                   mov    eax,0x1
+                           .text:0000039b bf 01 00 00 00                   mov    edi,0x1
+                           .text:000003a0 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:000003aa ba 71 05 00 00                   mov    edx,0x571
+                           .text:000003af 0f 05                            syscall 
+                           .text:000003b1 b8 00 00 00 00                   mov    eax,0x0
+                           .text:000003b6 bf 00 00 00 00                   mov    edi,0x0
+                           .text:000003bb 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:000003c5 ba 01 00 00 00                   mov    edx,0x1
+                           .text:000003ca 0f 05                            syscall 
+                           .text:000003cc e8 2f fc ff ff                   call   0x00000000 <_start>
 
-.text:000003d7 <_checkOption.closed>:
-                           .text:000003d7 c6 04 25 00 00 00 00 32          mov    BYTE PTR ds:0x0,0x32
-                           .text:000003df b8 01 00 00 00                   mov    eax,0x1
-                           .text:000003e4 bf 01 00 00 00                   mov    edi,0x1
-                           .text:000003e9 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:000003f3 ba 23 00 00 00                   mov    edx,0x23
-                           .text:000003f8 0f 05                            syscall 
-                           .text:000003fa b8 01 00 00 00                   mov    eax,0x1
-                           .text:000003ff bf 01 00 00 00                   mov    edi,0x1
-                           .text:00000404 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:0000040e ba af 05 00 00                   mov    edx,0x5af
-                           .text:00000413 0f 05                            syscall 
-                           .text:00000415 b8 00 00 00 00                   mov    eax,0x0
-                           .text:0000041a bf 00 00 00 00                   mov    edi,0x0
-                           .text:0000041f 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
-                           .text:00000429 ba 01 00 00 00                   mov    edx,0x1
-                           .text:0000042e 0f 05                            syscall 
-                           .text:00000430 e8 cb fb ff ff                   call   0x00000000 <_start>
+.text:000003d1 <_checkOption.closed>:
+                           .text:000003d1 c6 04 25 00 00 00 00 32          mov    BYTE PTR ds:0x0,0x32
+                           .text:000003d9 b8 01 00 00 00                   mov    eax,0x1
+                           .text:000003de bf 01 00 00 00                   mov    edi,0x1
+                           .text:000003e3 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:000003ed ba 23 00 00 00                   mov    edx,0x23
+                           .text:000003f2 0f 05                            syscall 
+                           .text:000003f4 b8 01 00 00 00                   mov    eax,0x1
+                           .text:000003f9 bf 01 00 00 00                   mov    edi,0x1
+                           .text:000003fe 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:00000408 ba af 05 00 00                   mov    edx,0x5af
+                           .text:0000040d 0f 05                            syscall 
+                           .text:0000040f b8 00 00 00 00                   mov    eax,0x0
+                           .text:00000414 bf 00 00 00 00                   mov    edi,0x0
+                           .text:00000419 48 be 00 00 00 00 00 00 00 00    movabs rsi,0x0
+                           .text:00000423 ba 01 00 00 00                   mov    edx,0x1
+                           .text:00000428 0f 05                            syscall 
+                           .text:0000042a e8 d1 fb ff ff                   call   0x00000000 <_start>

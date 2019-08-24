@@ -1,3 +1,21 @@
+import sys
+
+opcode = {
+    "mov rax": ("b8",5),
+    "mov rdx": ("ba",5),
+    "mov rdi": ("bf",5),
+    "mov rsi": ("48be",10),
+    "mov BYTE": ("c60425",8),
+
+    "cmp BYTE": ("803c25", 2),
+
+    "je": ("74",2),
+    "jmp": ("eb",2),
+
+    "call": ("e8",5),
+    "syscall": ("0f05",2)
+    }
+
 def get_variable(line : str, variables : dict):
     """
     This function gets a variable
@@ -8,10 +26,11 @@ def get_variable(line : str, variables : dict):
         The line to be checked
 
     constants : dict
-        A dict containing all constants
+        A dict containing all variables
     """
-    const, _, value = line.split()
-    constants[const] = value
+
+    var, val = line.split("db")
+    variables[var] = val
 
 def get_constant(line : str, constants : dict):
     """
@@ -25,38 +44,30 @@ def get_constant(line : str, constants : dict):
     constants : dict
         A dict containing all constants
     """
-    const, _, value = line.split()
+    const, value = line.split("equ")
     constants[const] = value
 
 def main():
     """
     This function handles main loop
     """
-    file = open('../Trabalho_1/portao.asm', 'r') 
+    file = open("../Trabalho_1/portao.asm", "r") 
     txt = file.readlines()
     file.close()
 
-    constants = dict()
-    variables = dict()
-    macros = dict()
+    tokens = dict()
 
+    ILC = 0
     for i, line in enumerate(txt):
         line = line.strip()
-        if 'db' in line:
-            get_variable(line, variables)
-        elif 'equ' in line:
-            get_constant(line, constants)
-        elif line.startswith('%macro'):
-            j = i + 1
-            _, macro_name, macro_size = line.split()
-            macro_size = int(macro_size)
-            macros[(macro_name, macro_size)] = list()
-        elif line.startswith('%endmacro'):
-            k = i
-            macros[(macro_name, macro_size)] = [l.strip() for l in txt[j:k]]
+        if line:
+            for opc in opcode.keys():
+                if opc in line:
+                    tokens[opc] = tokens[opc] + [ILC] if opc in tokens else [ILC]
+                    ILC += opcode[opc][1]
+            
+    print(ILC)
+    print(f"Tokens: {tokens}\n")
 
-    print(f"CONSTANTES: {constants}\n")
-    print(f"MACROS: {macros}\n")
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

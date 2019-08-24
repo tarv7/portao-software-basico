@@ -1,235 +1,298 @@
-; ----------------------------------------------------------------------------------------
-; To assemble and run:
-;
-;     nasm -felf64 portao.asm && ld portao.o && ./a.out
-; ----------------------------------------------------------------------------------------
-; section .data
-;   db  = define byte        (8 bits)
-;   dw  = define word        (2 * 8 bits = 16 bits)
-;   dd  = define double word (2 * 16 bits = 32 bits)
-;   dq  = define quad word   (4 * 16 bits = 64 bits)
-;   0   = termination (\0)
-;   10  = termination (\n)
-;   13  = carriage return
-; 
-; section .bss
-;   resb = reserve byte
-;   resw = reserve word
-;   resd = reserve double word
-;
-; definicoes
-;   estado do portao: {0: aberto, 1: abrindo, 2: fechado, 3: fechando}
-
-STDIN equ 0
-STDOUT equ 1
-STDERR equ 2
-
-SYS_READ equ 0
-SYS_WRITE equ 1
-SYS_EXIT equ 60
-
-LF equ 0x0A
-NULL equ 0x00
-
-%macro exit 0
-	mov rax, SYS_EXIT   ; system call for exit
-	xor rdi, rdi        ; exit code 0
-	syscall             ; invoke operating system to exit
-%endmacro
-
-%macro print 2
-	mov rax, SYS_WRITE  ; systemcall for write
-	mov rdi, STDOUT     ; file handle 1 is stdout
-	mov rsi, %1         ; address of output
-	mov rdx, %2         ; number of bytes 
-	syscall
-%endmacro
-
-%macro scan 2
-	mov rax, SYS_READ   ; systemcall for read
-	mov rdi, STDIN      ; file handle 0 is stdin
-	mov rsi, %1         ; address of input
-	mov rdx, %2         ; number of bytes 
-	syscall
-%endmacro
-
-%macro opcaoIncorreta 4
-	print   %1, %2
-	scan 	%3, 1
-	call    %4
-	syscall
-%endmacro
-
 section .data
 
-	labelFechado db "DESENHANDO COM CARACTERES: FECHADO", LF
-	lenLabelFechado equ $-labelFechado
-	portaoFechado db "'---------------------            -------------------------'", LF, "'    /    /    /    /|		  /   /    /    /    /   / '", LF,  "'-------------------/|           |----------------------   '", LF, "'   |    |     |    |--------------------|    |    |    |  '", LF,  "'-------------------|                    |--------------   '", LF,  "'     |     |     | |                    |     |    |      '", LF, "'-----------------x||                    |--------------   '", LF, "'   |    |     |    |                    |    |    |    |  '", LF,  "'-------------------|                    |--------------   '", LF, "'             fcf  /|0-----()-----()-----| fca             '", LF,  "'                 /            /                           '", LF,  "'                /            /                            '", LF, "'               /            /                             '", LF, "'              /            /                              '", LF, "'             /            /                               '", LF, "'            /            /                                '", LF, "'    / \                                                   '", LF, "'   /   \                                                  '", LF, "'     |                                                    '", LF, "'     |                                                    '", LF, "'   |---|                                                  '", LF, "'   | 0 | ba                                               '", LF, "'   | 0 | bf                                               '", LF, "'   |---|                                                  '", LF, LF
-	lenPortaoFechado equ $-portaoFechado
+labelFechado db "DESENHANDO COM CARACTERES: FECHADO", 10
+lenLabelFechado equ $-labelFechado
+portaoFechado db "'---------------------            -------------------------'",10,"'    /    /    /    /|  /   /    /    /    /   / '",10, "'-------------------/|           |----------------------   '",10,"'   |    |     |    |--------------------|    |    |    |  '",10, "'-------------------|                    |--------------   '",10, "'     |     |     | |                    |     |    |      '",10,"'-----------------x||                    |--------------   '",10,"'   |    |     |    |                    |    |    |    |  '",10, "'-------------------|                    |--------------   '",10,"'             fcf  /|0-----()-----()-----| fca             '",10, "'                 /            /                           '",10, "'                /            /                            '",10,"'               /            /                             '",10,"'              /            /                              '",10,"'             /            /                               '",10,"'            /            /                                '",10,"'    / \                                                   '",10,"'   /   \                                                  '",10,"'     |                                                    '",10,"'     |                                                    '",10,"'   |---|                                                  '",10,"'   | 0 | ba                                               '",10,"'   | 0 | bf                                               '",10,"'   |---|                                                  '",10,10
+lenPortaoFechado equ $-portaoFechado
 
-	labelAbrindo db "DESENHANDO COM CARACTERES: ABRINDO", LF
-	lenLabelAbrindo equ $-labelAbrindo
-	portaoAbrindo db "'----------------------            ---------------------'", LF, "'     /     /    /   /|           /     /     /    /   /'", LF, "'--------------------/|            -------------------  '", LF, "'    |     |     |  | |     -------------------    |  | '", LF, "'--------------------/|     |                 |-------  '", LF, "'      |      |     | |     |                 | |   |   '", LF, "'--------------------/|  x| |                 |-------  '", LF, "'    |     |     |  | |     |                 |   |   | '", LF, "'--------------------/      |                 |-------  '", LF, "'               fcf /       |0----()----()----|  fca    '", LF, "'                  /            /                       '", LF, "'                 /    --->    /                        '", LF, "'                /            /                         '", LF, "'               /            /                          '", LF, "'              /            /                           '", LF, "'             /            /                            '", LF, "'   / \                                                 '", LF, "'  /   \                                                '", LF, "'    |                                                  '", LF, "'    |                                                  '", LF, "'  |---|                                                '", LF, "'  | 0 | ba                                             '", LF, "'  | 0 | bf                                             '", LF, "'  |---|                                                '", LF, LF
-	lenPortaoAbrindo equ $-portaoAbrindo
+labelAbrindo db "DESENHANDO COM CARACTERES: ABRINDO", 10
+lenLabelAbrindo equ $-labelAbrindo
+portaoAbrindo db "'----------------------            ---------------------'", 10, "'     /     /    /   /|           /     /     /    /   /'", 10, "'--------------------/|            -------------------  '", 10, "'    |     |     |  | |     -------------------    |  | '", 10, "'--------------------/|     |                 |-------  '", 10, "'      |      |     | |     |                 | |   |   '", 10, "'--------------------/|  x| |                 |-------  '", 10, "'    |     |     |  | |     |                 |   |   | '", 10, "'--------------------/      |                 |-------  '", 10, "'               fcf /       |0----()----()----|  fca    '", 10, "'                  /            /                       '", 10, "'                 /    --->    /                        '", 10, "'                /            /                         '", 10, "'               /            /                          '", 10, "'              /            /                           '", 10, "'             /            /                            '", 10, "'   / \                                                 '", 10, "'  /   \                                                '", 10, "'    |                                                  '", 10, "'    |                                                  '", 10, "'  |---|                                                '", 10, "'  | 0 | ba                                             '", 10, "'  | 0 | bf                                             '", 10, "'  |---|                                                '", 10, 10
+lenPortaoAbrindo equ $-portaoAbrindo
 
-	labelFechando db "DESENHANDO COM CARACTERES: FECHANDO", LF
-	lenLabelFechando equ $-labelFechando
-	portaoFechando db "'----------------------            ---------------------'", LF, "'     /     /    /   /|           /     /     /    /   /'", LF, "'--------------------/|            -------------------  '", LF, "'    |     |     |  | |     -------------------    |  | '", LF, "'--------------------/|     |                 |-------  '", LF, "'      |      |     | |     |                 | |   |   '", LF, "'--------------------/|  x| |                 |-------  '", LF, "'    |     |     |  | |     |                 |   |   | '", LF, "'--------------------/      |                 |-------  '", LF, "'               fcf /       |0----()----()----|  fca    '", LF, "'                  /            /                       '", LF, "'                 /    <---    /                        '", LF, "'                /            /                         '", LF, "'               /            /                          '", LF, "'              /            /                           '", LF, "'             /            /                            '", LF, "'   / \                                                 '", LF, "'  /   \                                                '", LF, "'    |                                                  '", LF, "'    |                                                  '", LF, "'  |---|                                                '", LF, "'  | 0 | ba                                             '", LF, "'  | 0 | bf                                             '", LF, "'  |---|                                                '", LF, LF
-	lenPortaoFechando equ $-portaoFechando
-	
-	labelAberto db "DESENHANDO COM CARACTERES: ABERTO", LF
-	lenLabelAberto equ $-labelAberto
-	portaoAberto db '----------------------            ---------------------', LF, '     /     /    /   /|           /     /     /    /   /', LF, '--------------------/|            -------------------  ', LF, '    |     |     |  | |           -------------------  |', LF, '--------------------/|           |                 |---', LF, '      |      |     | |           |                 |   ', LF, '--------------------/|         x||                 |---', LF, '    |     |     |  | |           |                 | | ', LF, '--------------------/            |                 |---', LF, '               fcf /             |0----()----()----|fca', LF, '                  /            /                       ', LF, '                 /    <---    /                        ', LF, '                /            /                         ', LF, '               /            /                          ', LF, '              /            /                           ', LF, '             /            /                            ', LF, '   / \                                                 ', LF, '  /   \                                                ', LF, '    |                                                  ', LF, '    |                                                  ', LF, '  |---|                                                ', LF, '  | 0 | ba                                             ', LF, '  | 0 | bf                                             ', LF, '  |---|                                                ', LF
-	lenPortaoAberto equ $-portaoAberto
-	
-	clear db 27,"[H",27,"[2J"
-	lenClear equ $-clear
-	
-	estadoFechado db "Portao fechado!", LF
-	lenEstadoFechado equ $-estadoFechado
+labefechando db "DESENHANDO COM CARACTERES: FECHANDO", 10
+lenLabefechando equ $-labefechando
+portaoFechando db "'----------------------            ---------------------'", 10, "'     /     /    /   /|           /     /     /    /   /'", 10, "'--------------------/|            -------------------  '", 10, "'    |     |     |  | |     -------------------    |  | '", 10, "'--------------------/|     |                 |-------  '", 10, "'      |      |     | |     |                 | |   |   '", 10, "'--------------------/|  x| |                 |-------  '", 10, "'    |     |     |  | |     |                 |   |   | '", 10, "'--------------------/      |                 |-------  '", 10, "'               fcf /       |0----()----()----|  fca    '", 10, "'                  /            /                       '", 10, "'                 /    <---    /                        '", 10, "'                /            /                         '", 10, "'               /            /                          '", 10, "'              /            /                           '", 10, "'             /            /                            '", 10, "'   / \                                                 '", 10, "'  /   \                                                '", 10, "'    |                                                  '", 10, "'    |                                                  '", 10, "'  |---|                                                '", 10, "'  | 0 | ba                                             '", 10, "'  | 0 | bf                                             '", 10, "'  |---|                                                '", 10, 10
+lenPortaoFechando equ $-portaoFechando
 
-	estadoAberto db "Portao aberto!", LF
-	lenEstadoAberto equ $-estadoAberto
+labelAberto db "DESENHANDO COM CARACTERES: ABERTO", 10
+lenLabelAberto equ $-labelAberto
+portaoAberto db '----------------------            ---------------------', 10, '     /     /    /   /|           /     /     /    /   /', 10, '--------------------/|            -------------------  ', 10, '    |     |     |  | |           -------------------  |', 10, '--------------------/|           |                 |---', 10, '      |      |     | |           |                 |   ', 10, '--------------------/|         x||                 |---', 10, '    |     |     |  | |           |                 | | ', 10, '--------------------/            |                 |---', 10, '               fcf /             |0----()----()----|fca', 10, '                  /            /                       ', 10, '                 /    <---    /                        ', 10, '                /            /                         ', 10, '               /            /                          ', 10, '              /            /                           ', 10, '             /            /                            ', 10, '   / \                                                 ', 10, '  /   \                                                ', 10, '    |                                                  ', 10, '    |                                                  ', 10, '  |---|                                                ', 10, '  | 0 | ba                                             ', 10, '  | 0 | bf                                             ', 10, '  |---|                                                ', 10
+lenPortaoAberto equ $-portaoAberto
 
-	menu db "O que voce deseja fazer?", LF
-	lenMenu equ $-menu
-	menuPrincipal db "a - Abrir o portao", LF, "f - Fechar o portao?", LF, "0 - Sair", LF, LF
-	lenMenuPrincipal equ $-menuPrincipal
+clear db 27,"[H",27,"[2J"
+lenClear equ $-clear
 
-	menuFechado db "a - Abrir o portao", LF, "0 - Sair", LF, LF
-	lenMenuFechado equ $-menuFechado
-	
-	menuAbrindo db "a - Continuar abertura", LF, "f - Fechar o portao", LF, "0 - Sair", LF, LF
-	lenMenuAbrindo equ $-menuAbrindo
-	
-	menuFechando db "a - Abrir o portao", LF, "f - Continuar fechando o portao", LF, "0 - Sair", LF, LF
-	lenMenuFechando equ $-menuFechando
-	
-	menuAberto db "f - Fechar o portao", LF, "0 - Sair", LF, LF
-	lenMenuAberto equ $-menuAberto
-	
-	incorreta db "*** Opção incorreta, digite novamente ***", LF, LF
-	lenIncorreta equ $-incorreta
+estadoFechado db "Portao fechado!", 10
+lenEstadoFechado equ $-estadoFechado
 
-	status db "?", 0
+estadoAberto db "Portao aberto!", 10
+lenEstadoAberto equ $-estadoAberto
 
-	lenOpcao equ 1
+menu db "O que voce deseja fazer?", 10
+lenMenu equ $-menu
+menuPrincipal db "a - Abrir o portao", 10, "f - Fechar o portao?", 10, "0 - Sair", 10, 10
+lenMenuPrincipal equ $-menuPrincipal
+
+menuFechado db "a - Abrir o portao", 10, "0 - Sair", 10, 10
+lenMenuFechado equ $-menuFechado
+
+menuAbrindo db "a - Continuar abertura", 10, "f - Fechar o portao", 10, "0 - Sair", 10, 10
+lenMenuAbrindo equ $-menuAbrindo
+
+menuFechando db "a - Abrir o portao", 10, "f - Continuar fechando o portao", 10, "0 - Sair", 10, 10
+lenMenuFechando equ $-menuFechando
+
+menuAberto db "f - Fechar o portao", 10, "0 - Sair", 10, 10
+lenMenuAberto equ $-menuAberto
+
+incorreta db "*** Opção incorreta, digite novamente ***", 10, 10
+lenIncorreta equ $-incorreta
+
+status db "?", 0
+
+lenOpcao equ 1
 
 section .bss
-
-	opcao resb lenOpcao
+opcao resb lenOpcao
 
 section .text
-	global _start
+global _start
 
-	_start:
+_start:
 
-		_menu:
-			print   menu, lenMenu
+_menu:
+mov rax, 1  
+mov rdi, 1     
+mov rsi, menu         
+mov rdx, lenMenu         
+syscall
 
-			.checkStatus:
-				cmp     BYTE[status], '?'
-				je      .start
-				cmp     BYTE[status], '0'
-				je      .opened
-				cmp     BYTE[status], '1'
-				je      .opening
-				cmp     BYTE[status], '2'
-				je      .closed
-				cmp     BYTE[status], '3'
-				je      .closing
+.checkStatus: 
+cmp BYTE[status], '?'
+je .start
+cmp BYTE[status], '0'
+je .opened
+cmp BYTE[status], '1'
+je .opening
+cmp BYTE[status], '2'
+je .closed
+cmp BYTE[status], '3'
+je .closing
 
-			.start:
-				print   menuPrincipal, lenMenuPrincipal
-				jmp .check
+.start:
+mov rax, 1  
+mov rdi, 1     
+mov rsi, menuPrincipal         
+mov rdx, lenMenuPrincipal         
+syscall
+jmp .check
 
-			.opened:
-				print  menuAberto, lenMenuAberto 
-				jmp .check
+.opened:
+mov rax, 1  
+mov rdi, 1     
+mov rsi, menuAberto         
+mov rdx, lenMenuAberto         
+syscall 
+jmp .check
 
-			.opening:
-				print  menuAbrindo, lenMenuAbrindo 
-				jmp .check
+.opening:
+mov rax, 1  
+mov rdi, 1     
+mov rsi, menuAbrindo         
+mov rdx, lenMenuAbrindo         
+syscall 
+jmp .check
 
-			.closed:
-				print  menuFechado, lenMenuFechado 
-				jmp .check
+.closed:
+mov rax, 1  
+mov rdi, 1     
+mov rsi, menuFechado         
+mov rdx, lenMenuFechado         
+syscall 
+jmp .check
 
-			.closing:
-				print  menuFechando, lenMenuFechando 
-				jmp .check
+.closing:
+mov rax, 1  
+mov rdi, 1     
+mov rsi, menuFechando         
+mov rdx, lenMenuFechando         
+syscall 
+jmp .check
 
-			.check:
-				scan    opcao, lenOpcao
-				call _checkOption
+.check:
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, lenOpcao         
+syscall
+call _checkOption
 
-		_checkOption:
-			print 	clear, lenClear
-			cmp     BYTE[status], '?'
-			je      .starting
-			cmp     BYTE[opcao], '0'
-			je      .end
-			cmp     BYTE[opcao], 'a'
-			je      .open
-			cmp     BYTE[opcao], 'f'
-			je      .close
+_checkOption:
+mov rax, 1  
+mov rdi, 1     
+mov rsi, clear         
+mov rdx, lenClear         
+syscall
+cmp BYTE[status], '?'
+je .starting
+cmp BYTE[opcao], '0'
+je .end
+cmp BYTE[opcao], 'a'
+je .open
+cmp BYTE[opcao], 'f'
+je .close
 
-			opcaoIncorreta incorreta, lenIncorreta, opcao, _menu 
+mov rax, 1  
+mov rdi, 1     
+mov rsi, incorreta         
+mov rdx, lenIncorreta         
+syscall
 
-			.starting:
-				cmp     BYTE[opcao], '0'
-				je      .end
-				cmp     BYTE[opcao], 'a'
-				je      .opened
-				cmp     BYTE[opcao], 'f'
-				je      .closed
-				opcaoIncorreta incorreta, lenIncorreta, opcao, _menu 
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, 1
 
-			.end:
-				exit
+call _menu 
 
-			.open:
-				cmp     BYTE[status], '1'
-				je      .opened
-				cmp     BYTE[status], '2'
-				je      .opening
-				cmp     BYTE[status], '3'
-				je      .opening
-				opcaoIncorreta incorreta, lenIncorreta, opcao, _menu 
+.starting:
+cmp BYTE[opcao], '0'
+je .end
+cmp BYTE[opcao], 'a'
+je .opened
+cmp BYTE[opcao], 'f'
+je .closed
+mov rax, 1  
+mov rdi, 1     
+mov rsi, incorreta         
+mov rdx, lenIncorreta         
+syscall
 
-			.close:
-				cmp     BYTE[status], '0'
-				je      .closing
-				cmp     BYTE[status], '1'
-				je      .closing
-				cmp     BYTE[status], '3'
-				je      .closed
-				opcaoIncorreta incorreta, lenIncorreta, opcao, _menu 
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, 1
 
-			.opened:
-				mov     BYTE[status], '0'
-				print   labelAberto, lenLabelAberto
-				print   portaoAberto, lenPortaoAberto
-				scan opcao, 1
-				call _menu
+call _menu 
 
-			.opening:
-				mov     BYTE[status], '1'
-				print   labelAbrindo, lenLabelAbrindo
-				print   portaoAbrindo, lenPortaoAbrindo
-				scan opcao, 1
-				call _menu
+.end:
+mov rax, 60   
+mov rdi, 0
+syscall
 
-			.closing:
-				mov     BYTE[status], '3'
-				print   labelFechando, lenLabelFechando
-				print   portaoFechando, lenPortaoFechando
-				scan opcao, 1
-				call _menu
+.open:
+cmp BYTE[status], '1'
+je .opened
+cmp BYTE[status], '2'
+je .opening
+cmp BYTE[status], '3'
+je .opening
+mov rax, 1  
+mov rdi, 1     
+mov rsi, incorreta         
+mov rdx, lenIncorreta         
+syscall
 
-			.closed:
-				mov     BYTE[status], '2'
-				print   labelFechado, lenLabelFechado
-				print   portaoFechado, lenPortaoFechado
-				scan opcao, 1
-				call _menu
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, 1
+
+call _menu 
+
+.close:
+cmp BYTE[status], '0'
+je .closing
+cmp BYTE[status], '1'
+je .closing
+cmp BYTE[status], '3'
+je .closed
+mov rax, 1  
+mov rdi, 1     
+mov rsi, incorreta         
+mov rdx, lenIncorreta         
+syscall
+
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, 1
+
+call _menu 
+
+.opened:
+mov BYTE[status], '0'
+mov rax, 1  
+mov rdi, 1     
+mov rsi, labelAberto         
+mov rdx, lenLabelAberto         
+syscall
+mov rax, 1  
+mov rdi, 1     
+mov rsi, portaoAberto         
+mov rdx, lenPortaoAberto         
+syscall
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, 1         
+syscall
+call _menu
+
+.opening:
+mov BYTE[status], '1'
+mov rax, 1  
+mov rdi, 1     
+mov rsi, labelAbrindo         
+mov rdx, lenLabelAbrindo         
+syscall
+mov rax, 1  
+mov rdi, 1     
+mov rsi, portaoAbrindo         
+mov rdx, lenPortaoAbrindo         
+syscall
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, 1         
+syscall
+call _menu
+
+.closing:
+mov BYTE[status], '3'
+mov rax, 1  
+mov rdi, 1     
+mov rsi, labefechando         
+mov rdx, lenLabefechando         
+syscall
+mov rax, 1  
+mov rdi, 1     
+mov rsi, portaoFechando         
+mov rdx, lenPortaoFechando         
+syscall
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, 1         
+syscall
+call _menu
+
+.closed:
+mov BYTE[status], '2'
+mov rax, 1  
+mov rdi, 1     
+mov rsi, labelFechado         
+mov rdx, lenLabelFechado         
+syscall
+mov rax, 1  
+mov rdi, 1     
+mov rsi, portaoFechado         
+mov rdx, lenPortaoFechado         
+syscall
+mov rax, 0   
+mov rdi, 0      
+mov rsi, opcao         
+mov rdx, 1         
+syscall
+call _menu
