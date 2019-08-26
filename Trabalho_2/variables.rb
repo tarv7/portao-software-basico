@@ -1,3 +1,6 @@
+# Guarda qual passagem estamos
+$passagem = 0
+
 # Token de instruções
 $insts = ['mov', 'xor', 'cmp', 'je', 'jmp', 'call', 'syscall']
 
@@ -8,15 +11,7 @@ $macros = ['exit', 'print', 'scan', 'opcaoIncorreta']
 $linhas_macro = { }
 
 # Lista de rótulos e seus endereços de memória
-$labels = { '.start': '28',
-            '.opened': '3b',
-            '.opening': '4e',
-            '.closed': '61',
-            '.closing': '74',
-            '.starting': '67',
-            '.end': 'bc', 
-            '.open': 'b8', 
-            '.close': '11' }
+$labels = { }
 
 # Mnemónicos responsáveis por determinar o opcode
 $mnems = { 'mov rax':  { 'hexa': 'b8', 'tamanho': 5 },                   # não
@@ -33,7 +28,7 @@ $mnems = { 'mov rax':  { 'hexa': 'b8', 'tamanho': 5 },                   # não
 
 # Array que determina quais mnemónicos precisam levar em  consideração
 # o terceiro operador
-$ver_op_3 = ['mov rax', 'mov rdx', 'mov rdi', 'mov BYTE[status]', 'cmp']
+$ver_op_3 = ['mov rax', 'mov rdx', 'mov rdi', 'mov BYTE[status]', 'cmp', 'je']
 
 # Constantes do sistema
 $constantes = { 'STDIN': 0,
@@ -44,22 +39,25 @@ $constantes = { 'STDIN': 0,
                 'SYS_EXIT': 60 }
 
 # Variáveis do sistema (precisa alterar para o tamanho certo, fiquei com preguiça)
-$variaveis = {  'lenLabelFechado': 99,
-                'lenPortaoFechado': 99,
-                'lenLabelAbrindo': 99,
-                'lenPortaoAbrindo': 99,
-                'lenLabelFechando': 99,
-                'lenLabelAberto': 99,
-                'lenPortaoAberto': 99,
-                'lenClear': 99,
-                'lenEstadoAberto': 99,
-                'lenMenu': 99,
-                'lenMenuPrincipal': 99,
-                'lenMenuFechado': 99,
-                'lenMenuFechando': 99,
-                'lenMenuAberto': 99,
-                'lenIncorreta': 99,
-                'lenOpcao': 99 }
+$variaveis = {  'lenLabelFechado': 35,
+                'lenPortaoFechado': 1463,
+                'lenLabelAbrindo': 35,
+                'lenPortaoAbrindo': 1393,
+                'lenLabelFechando': 36,
+                'lenPortaoFechando': 1393,
+                'lenLabelAberto': 34,
+                'lenPortaoAberto': 1392,
+                'lenClear': 9,
+                'lenEstadoFechado': 16,
+                'lenEstadoAberto': 15,
+                'lenMenu': 25,
+                'lenMenuPrincipal': 50,
+                'lenMenuFechado': 29,
+                'lenMenuAbrindo': 53,
+                'lenMenuFechando': 61,
+                'lenMenuAberto': 30,
+                'lenIncorreta': 41,
+                'lenStatus': 2 }
 
 # Parâmetros recebidos na macro
 $variaveis_macro = ['%1', '%2', '%3', '%4', '%1,', '%2,', '%3,', '%4,']
